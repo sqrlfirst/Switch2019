@@ -1,46 +1,46 @@
 `include "header.v"
 
 module MAC_memory
-    #(
-        parameter               pADRESS = 2,      //Capacity for port №   
-                                pSLOTS = 16384,   //№ of adresses   
-                                pDATA_WIDTH=8,
-                                pTIME = 9,         //Capacity for save time = 300 seconds 
-                                pMAX_PACKET_LENGHT = 1536,
-                                pONE_SECOND = 32768
-    )
     (
-        input wire                          iclk,
-        input wire                          i_dv,
-        input wire [pADRESS-1:0]            i_port_num,
-        input wire [pDATA_WIDTH-1:0]        irx_d,
-        input wire [2:0]                    iFSM_state,
-        output reg [pADRESS-1:0]            o_port_num
+        input wire                              iclk,
+        input wire [pMAX_PORT_NUMBER-1:0]       i_newSA,
+        input wire [$clog2(pSLOTS)-1:0]         irx_SA,
+        output reg [pMAX_PORT_NUMBER-1:0]       o_port_num,
+        output reg [pMAX_PORT_NUMBER-1:0]       o_show_SA,
+        output reg                              o_write_en
     );
 
-    reg [pADRESS-1:0]                       r_port_num [pSLOTS-1:0] ='{default: 'b0};
-    reg [pTIME-1:0]                         r_time [pSLOTS-1:0] ='{default: 'd300};
-    reg [$clog2(pSLOTS)-1:0]                r_adress ='0;
-    reg [$clog2(pSLOTS)-1:0]                r_read_adress ='0; 
+    //reg [pADRESS-1:0]                       r_port_num [pSLOTS-1:0] ='{default: 'b0};
+    //reg [pTIME-1:0]                         r_time [pSLOTS-1:0] ='{default: 'd300};
+   
 
-    reg [$clog2(pMAX_PACKET_LENGHT)-1:0]    r_counter_len ='0;
-    reg [5:0]                               r_MAC_higher ='0; 
-    reg [pDATA_WIDTH-1:0]                   r_MAC_lower ='0;
-    reg                                     r_write_en='0;
-
-    reg [$clog2(pSLOTS)-1:0]                r_d_counter='0; 
-    reg [$clog2(pONE_SECOND)-1:0]           r_FBC='0;
+    //reg [$clog2(pSLOTS)-1:0]                r_d_counter='0; 
+    //reg [$clog2(pONE_SECOND)-1:0]           r_FBC='0;
+    reg [pADRESS-1:0]                       r_working_port = '0;
 
 
 
-    always @(posedge iclk) begin
+    /*always @(posedge iclk) begin
     if (r_FBC==15'd32768) 
        r_FBC<=0;
     r_FBC<=r_FBC+1;
-    end 
+    end*/
 
 
-    always @(posedge iclk) begin                        //Getting MAC adress
+    always @(posedge iclk) begin
+    if (i_newSA [r_working_port] == 1) begin
+        o_port_num<=r_working_port;
+        o_show_SA [r_working_port] <= 1;
+        o_write_en<=1;
+        else o_write_en<=0;
+        end
+    if (r_working_port==2'b11) 
+        r_working_port<=2'b00;
+    else r_working_port<=r_working_port+1;
+    end
+
+    
+    /*always @(posedge iclk) begin                        //Getting MAC adress
         if ((iFSM_state!==lpNO_FRAME)&(iFSM_state!==lpPREAMBLE)&(iFSM_state!==lpFCS)) 
             r_counter_len<=r_counter_len+1;       
         if ((iFSM_state==lpSA)|(iFSM_state==lpLENGTH)|(iFSM_state==lpDATA)) begin 
@@ -57,9 +57,9 @@ module MAC_memory
         end
         if (iFSM_state==lpFCS) 
             r_counter_len<='0;
-        end
+        end*/
 
-    always @(posedge iclk) begin 
+    /*always @(posedge iclk) begin 
         if (r_write_en) begin
             r_port_num[r_adress] <= i_port_num;
             r_time[r_adress] <= 9'd300;
@@ -69,7 +69,7 @@ module MAC_memory
             r_time[r_d_counter]<=r_time[r_d_counter]-1;
         end
         o_port_num<=r_port_num[r_read_adress];
-        end
+        end*/
 
     endmodule
 

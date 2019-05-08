@@ -1,0 +1,172 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dC:/Users/QWr/Documents/GitHub/copy_mem_packet/memories
+Xcrc_v_unit
+Z0 DXx6 sv_std 3 std 0 22 <EOTafDcUY:cQeO^ICn]m3
+Z1 !s110 1556511987
+!i10b 1
+!s100 lH]PLaRRU?_1f8j9<CVNG0
+Id0o^QH15`75:YDzYi_In90
+Vd0o^QH15`75:YDzYi_In90
+!i103 1
+S1
+Z2 dC:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC
+Z3 w1555073560
+8C:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/crc.v
+FC:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/crc.v
+L0 3
+Z4 OV;L;10.3d;59
+r1
+!s85 0
+31
+!s108 1556511987.359000
+!s107 C:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/crc.v|
+!s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/crc.v|
+!i113 1
+Z5 o-work work -sv
+vframe_receiver
+R0
+R1
+!i10b 1
+!s100 2j6LiiBFdW7g20WYkZa>82
+I3Z?mY[kaAP1bn]c=GAe><1
+Z6 V`JN@9S9cnhjKRR_L]QIcM3
+!s105 frame_receiver_v_unit
+S1
+R2
+w1556104164
+8C:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/frame_receiver.v
+FC:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/frame_receiver.v
+Z7 Fcrc.v
+L0 1
+R4
+r1
+!s85 0
+31
+!s108 1556511987.727000
+!s107 crc.v|C:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/frame_receiver.v|
+!s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/frame_receiver.v|
+!i113 1
+R5
+Xheader_v_unit
+R0
+!s110 1556511989
+!i10b 1
+!s100 nX]_:O1X=d?n8n6WE]nAP3
+IPMN3>MGTgbIUaAO`LLGn>2
+VPMN3>MGTgbIUaAO`LLGn>2
+!i103 1
+S1
+R2
+Z8 w1556511900
+8C:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/header.v
+FC:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/header.v
+L0 2
+R4
+r1
+!s85 0
+31
+!s108 1556511989.278000
+!s107 C:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/header.v|
+!s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/header.v|
+!i113 1
+R5
+vMAC_memory
+R0
+DXx4 work 17 MAC_memory_v_unit 0 22 JEdz>2n1dB?QZPbD46ZUb0
+R6
+r1
+!s85 0
+31
+!i10b 1
+!s100 f5Lj5<C=H2E13VmiHeA7z0
+IO89H4aHfR:MYMB@I:7WWD0
+!s105 MAC_memory_v_unit
+S1
+R2
+w1556511715
+Z9 8C:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/MAC_memory.v
+Z10 FC:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/MAC_memory.v
+L0 3
+R4
+Z11 !s108 1556511988.155000
+Z12 !s107 header.v|C:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/MAC_memory.v|
+Z13 !s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/MAC_memory.v|
+!i113 1
+R5
+n@m@a@c_memory
+XMAC_memory_v_unit
+R0
+VJEdz>2n1dB?QZPbD46ZUb0
+r1
+!s85 0
+31
+!i10b 1
+!s100 ?6Qeh26^Ye123ENcM6b3R3
+IJEdz>2n1dB?QZPbD46ZUb0
+!i103 1
+S1
+R2
+R8
+R9
+R10
+Fheader.v
+L1 2
+R4
+R11
+R12
+R13
+!i113 1
+R5
+n@m@a@c_memory_v_unit
+vpcap2gmii
+R0
+Z14 !s110 1556511988
+!i10b 1
+!s100 OJ^nb661iUSZNi;`FaaEN3
+I;[Md@XJnSmJH]58a=e8><3
+R6
+!s105 pcap2gmii_sv_unit
+S1
+R2
+R3
+8C:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/pcap2gmii.sv
+FC:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/pcap2gmii.sv
+R7
+L0 9
+R4
+r1
+!s85 0
+31
+!s108 1556511988.519000
+!s107 crc.v|C:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/pcap2gmii.sv|
+!s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/pcap2gmii.sv|
+!i113 1
+R5
+vravil_memory_tb
+R14
+!i10b 1
+!s100 SJi^Bfo9=XAI;BXcTE0f<3
+IB[=a5iHKL1@dnd@fjY:]H1
+R6
+R2
+w1556439754
+8C:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/ravil_memory_tb.v
+FC:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/ravil_memory_tb.v
+L0 1
+R4
+r1
+!s85 0
+31
+!s108 1556511988.860000
+!s107 C:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/ravil_memory_tb.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/QWr/Documents/GitHub/copy_mem_packet/MAC/ravil_memory_tb.v|
+!i113 1
+o-work work

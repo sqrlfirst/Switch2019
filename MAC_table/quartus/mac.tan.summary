@@ -1,0 +1,56 @@
+--------------------------------------------------------------------------------------
+Timing Analyzer Summary
+--------------------------------------------------------------------------------------
+
+Type           : Worst-case tsu
+Slack          : N/A
+Required Time  : None
+Actual Time    : 5.201 ns
+From           : iFSM_state[2]
+To             : r_read_adress[12]
+From Clock     : --
+To Clock       : iclk
+Failed Paths   : 0
+
+Type           : Worst-case tco
+Slack          : N/A
+Required Time  : None
+Actual Time    : 11.109 ns
+From           : altsyncram:r_port_num_rtl_0|altsyncram_pkl1:auto_generated|ram_block1a1~portb_address_reg0
+To             : o_port_num[1]
+From Clock     : iclk
+To Clock       : --
+Failed Paths   : 0
+
+Type           : Worst-case th
+Slack          : N/A
+Required Time  : None
+Actual Time    : 0.227 ns
+From           : irx_d[5]
+To             : r_MAC_higher[5]
+From Clock     : --
+To Clock       : iclk
+Failed Paths   : 0
+
+Type           : Clock Setup: 'iclk'
+Slack          : N/A
+Required Time  : None
+Actual Time    : Restricted to 250.00 MHz ( period = 4.000 ns )
+From           : r_counter_len[5]
+To             : r_read_adress[12]
+From Clock     : iclk
+To Clock       : iclk
+Failed Paths   : 0
+
+Type           : Total number of failed paths
+Slack          : 
+Required Time  : 
+Actual Time    : 
+From           : 
+To             : 
+From Clock     : 
+To Clock       : 
+Failed Paths   : 0
+
+--------------------------------------------------------------------------------------
+

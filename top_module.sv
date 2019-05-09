@@ -3,7 +3,8 @@
 module top_module
 (
         input wire          iclk,                       // General clock
-        
+        input wire [$clog2(pMAC_MEM_DEPTH)-1:0]         i_MAC_DA,
+
         input wire          i_rx_clk_0,    // GMII0 
         input wire          i_rx_dv_0,     // GMII0
         input wire          i_rx_er_0,     // GMII0 

@@ -1,9 +1,9 @@
 module Ethernet_rx_frame
     (
-        input wire          i_rx_clk,
-        input wire          i_rx_dv,
-        input wire          i_rx_er,
-        input wire  [7:0]   i_rx_d,
+        input wire          i_rx_clk,    // GMII
+        input wire          i_rx_dv,     // GMII
+        input wire          i_rx_er,     // GMII
+        input wire  [7:0]   i_rx_d,      // GMII
         input wire          ishowSA,
         output wire [2:0]   o_fsm_state,
         output reg          o_fsm_state_changed = 0,

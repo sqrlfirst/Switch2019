@@ -17,5 +17,3 @@ parameter               pMAX_PORT_NUMBER = 4,
                         pMAX_PACKET_LENGHT = 1536,
                         pONE_SECOND = 327686;
                         
-
-

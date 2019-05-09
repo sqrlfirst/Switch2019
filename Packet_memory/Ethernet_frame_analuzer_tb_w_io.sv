@@ -35,7 +35,7 @@ module Ethernet_frame_analyzer_tb_w_io(
         .opkt_cnt       ()
     );
 
-    Ethernet_RX_frame_5cd
+    Ethernet_rx_frame
     DUT5cd
     (
         .i_rx_clk               (iclk),

@@ -16,20 +16,15 @@ module copy_packet_to_mem
     input wire [pDATA_WIDTH-1:0]            irx_d,
     input wire                              irx_er,
     input wire [pFSM_BUS_WIDHT-1:0]         iframe_state,
-    input wire                              ird_en,
     input wire                              imem_ptr,               // add pointer to mem RB
-    input wire                              
+    input wire                              ida_en,                                                                // Ended there
     output wire                             oempty,
     output wire                             ofull,
     output wire [pDATA_WIDTH-1:0]           or_data,
 
     output wire [pFIFO_WIDTH-1:0]           olen_pac, 
-    output reg                              onext_last,
-    output wire [$clog2(pDEPTH_RAM)-1:0]    obytes_to_read,
-
-    output wire                             ofifo_em,
-    output wire                             ofifo_full,
-    output wire [13:0]                      oPacDA                  //  
+    output reg []
+    output wire [13:0]                      oPacDA                //  
 
     );
 
@@ -54,6 +49,8 @@ module copy_packet_to_mem
     reg [pFIFO_WIDTH-1:0]              rfifo_d     = 'b0;
     reg                                rfifo_empty;
     reg                                rfifo_full;
+    reg [13:0]                         rpacda;
+    reg [2:0]                          rpacda_count;
 
     fifo                                                            // FIFO Module
     #(                                                              // ===========
@@ -91,7 +88,7 @@ module copy_packet_to_mem
             lpWAIT: begin                 
                 if (idv & (iframe_state == lpSFD) & !irx_er) begin
                     rWR_state <= rWR_state_next;
-                    rWr_en <= 1'b1;
+                    rWr_en    <= 1'b1;
                 end   
                 rWr_ptr_now <= rWr_ptr_succ;    
             end
@@ -101,16 +98,16 @@ module copy_packet_to_mem
                 end
                 else if (idv == 'b0) begin 
                     rWR_state <= rWR_state_next;
-                    rWr_en <=1'b0;
+                    rWr_en    <=1'b0;
                 end
                 else begin
                     if ((rWr_ptr_now + 'b1) > pDEPTH_RAM) begin
-                        rWr_count <= rWr_count + 'd1;
-                        rWr_ptr_now <= 'd0;
+                        rWr_count    <= rWr_count + 'd1;
+                        rWr_ptr_now  <= 'd0;
                         rWr_ptr_succ <= 'd0;
                     end
                     else begin
-                        rWr_count <= rWr_count + 'd1;
+                        rWr_count   <= rWr_count + 'd1;
                         rWr_ptr_now <= rWr_ptr_now + 'd1;   
                     end
                 end
@@ -121,14 +118,14 @@ module copy_packet_to_mem
                 end
                 else begin
                     if(rfifo_wr_en) begin
-                        rfifo_wr_en <= 1'b0;
-                        rWr_count <= 'd0;
-                        rWR_state <= rWR_state_next;
+                        rfifo_wr_en  <= 1'b0;
+                        rWr_count    <= 'd0;
+                        rWR_state    <= rWR_state_next;
                         rWr_ptr_succ <= rWr_ptr_now;
                     end
                     else begin
                         rfifo_wr_en <= 1'b1;
-                        rfifo_d <= rWr_count;
+                        rfifo_d     <= rWr_count;
                     end
                 end
             end
@@ -148,32 +145,42 @@ module copy_packet_to_mem
         if (ird_en) begin 
             if (rRd_count != 'b0) begin
                 if ((rWr_ptr_now + 'b1) > pDEPTH_RAM) begin
-                    rRd_count <= rRd_count - 'b1;
-                    rRd_ptr_now <= 'b0;
+                    rRd_count    <= rRd_count - 'b1;
+                    rRd_ptr_now  <= 'b0;
                     rRd_ptr_succ <= 'd0;
                 end
                 else begin
-                    rRd_count <= rRd_count - 'b1;
+                    rRd_count   <= rRd_count - 'b1;
                     rRd_ptr_now <= rRd_ptr_now + 'b1;    
                 end
                 rfifo_rd_en <= 'b0;
             end
             else begin
-                rRd_count <= olen_pac + 1'b1;
+                rRd_count   <= olen_pac + 1'b1;
                 rfifo_rd_en <= 'b1;
             end
         end
         else begin
-            rRd_count <= 'b0;
+            rRd_count    <= 'b0;
             rRd_ptr_succ <= rRd_ptr_now;
         end
     end
 
-    // next last
+    // read Da function
     always @(posedge iclk) begin
-        if (rRd_count == 'b10) onext_last <= 1'b1;
-        else onext_last <= 1'b0;
-    end 
+        if (iframe_state = lpDA) begin
+            if (rpacda_count == 3'd1)      rpacda[13:8] <= irx_d[5:0];
+            else if (rpacda_count == 3'd0) rpacda[7:0] <= ird;
+            else                           rpacda_count <= rpacda_count - 1;
+        end
+        else rpacda_count <= 3'd5;
+    end
+
+    // Show DA func
+    always @(posedge iclk) begin
+        if (ida_en) oPacDA <= rpacda;                                                             // SEEMS that we have som problems  
+        oPacDA <= 13'bx; 
+    end
 
     // Read and write pointers check
     assign ofull = (((rWr_ptr_succ > rRd_ptr_succ) ? 
@@ -182,8 +189,6 @@ module copy_packet_to_mem
     assign oempty = (rWr_ptr_succ == rRd_ptr_succ) ?  1'b1 : 1'b0;
     // read_counter_output
     assign obytes_to_read = rRd_count;
-    // Inner fifo flags // may removed after testing
-    assign ofifo_em   = rfifo_empty;
-    assign ofifo_full = rfifo_full;
 
 endmodule
+ 

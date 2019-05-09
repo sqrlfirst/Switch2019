@@ -3,7 +3,7 @@
 localparam [2:0] lpND  =  3'b000,     // No data
                  lpPRE =  3'b001,     // Preambula
                  lpSFD =  3'b010,     // Delimiter
-                 lpDA  =  3'b011,     // Destination Adress
+                 lpDA  =  3'b011,     // Destination Address
                  lpSA  =  3'b100,     // Source Adress
                  lpDATA = 3'b101,     // Data
                  lpCRC  = 3'b110;     // CRC  

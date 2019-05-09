@@ -4,10 +4,10 @@ module MAC_table
     (
         input wire                              iclk,
         input wire                              i_write_enable,
-        input wire                              i_port_num,
-        input wire [pMAX_PORT_NUMBER-1:0]       i_MAC_SA,
-        input wire [pMAX_PORT_NUMBER-1:0]       i_MAC_DA,
-        output reg                              o_port_num
+        input wire [pADRESS-1:0]                i_port_num,
+        input wire [13:0]                       i_MAC_SA,
+        input wire [13:0]                       i_MAC_DA,
+        output reg [pADRESS-1:0]                o_port_num
     );
 
     //Memory registers

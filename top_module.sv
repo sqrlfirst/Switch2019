@@ -4,6 +4,7 @@ module top_module
 (
         input wire          iclk,                       // General clock
         input wire [$clog2(pMAC_MEM_DEPTH)-1:0]         i_MAC_DA,
+        output wire         oMAC_table_port_num;
 
         input wire          i_rx_clk_0,    // GMII0 
         input wire          i_rx_dv_0,     // GMII0
@@ -62,7 +63,7 @@ module top_module
     wire [$clog2(pPORT_NUM)-1:0]    wport_num;
     wire                            wwr_en;
     wire [13:0]                     wosa;
-    wire                            MAC_table_port_num;
+
 
 Ethernet_rx_frame GMII0 
 (
@@ -144,6 +145,6 @@ MAC_table MAC_table
 .i_port_num         (wport_num),
 .i_MAC_SA           (wosa),
 .i_MAC_DA           (i_MAC_DA),
-.o_port_num         (MAC_table_port_num)
+.o_port_num         (oMAC_table_port_num)
 );
 endmodule

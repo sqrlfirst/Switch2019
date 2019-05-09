@@ -1,4 +1,7 @@
-
+parameter               pSLOTS = 16384,   //№ of adresses 
+                        pTIME = 9,         //Capacity for save time = 300 seconds 
+                        pONE_SECOND = 32768;
+                        
 // paprameters for packet state
 localparam [2:0] lpND  =  3'b000,     // No data
                  lpPRE =  3'b001,     // Preambula

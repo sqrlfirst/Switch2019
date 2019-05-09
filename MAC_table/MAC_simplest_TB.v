@@ -4,10 +4,10 @@ module MAC_simplest_tb();
 
 reg                               clock='0;
 reg                               write_enable='0;
-reg [pADRESS-1:0]                 port_num='0;;
-reg [13:0]                        SA='0;
-reg [13:0]                        DA='0;
-wire [pADRESS-1:0]                PORT_NUM;
+reg [$clog2(pPORT_NUM)-1:0]                 port_num='0;;
+reg [$clog2(pSLOTS)-1:0]                    SA='0;
+reg [$clog2(pSLOTS)-1:0]                    DA='0;
+wire [$clog2(pPORT_NUM)-1:0]                PORT_NUM;
 
 MAC_table
 TABLE

@@ -2,17 +2,17 @@
 
 module MAC_table
     (
-        input wire                              iclk,
-        input wire                              i_write_enable,
-        input wire [pADRESS-1:0]                i_port_num,
-        input wire [13:0]                       i_MAC_SA,
-        input wire [13:0]                       i_MAC_DA,
-        output reg [pADRESS-1:0]                o_port_num
+        input wire                                  iclk,
+        input wire                                  i_write_enable,
+        input wire [$clog2(pPORT_NUM)-1:0]                    i_port_num,
+        input wire [$clog2(pSLOTS)-1:0]                       i_MAC_SA,
+        input wire [$clog2(pSLOTS)-1:0]                       i_MAC_DA,
+        output reg [$clog2(pPORT_NUM)-1:0]                    o_port_num
     );
 
     //Memory registers
-    reg [pADRESS-1:0]                       r_port_num [pSLOTS-1:0] = '{default: 'b0};
-    reg [pTIME-1:0]                         r_time [pSLOTS-1:0] = '{default: 'd300};
+    reg [$clog2(pPORT_NUM)-1:0]                       r_port_num [pSLOTS-1:0] = '{default: 'b0};
+    reg [pTIME-1:0]                                   r_time [pSLOTS-1:0] = '{default: 'd300};
 
     //Registers for counter
     reg [$clog2(pSLOTS)-1:0]                r_d_counter = '0; 

@@ -1,4 +1,4 @@
-parameter               pSLOTS = 16384,   //№ of adresses 
+parameter               pMAC_MEM_DEPTH = 16384,   //№ of adresses 
                         pTIME = 9,         //Capacity for save time = 300 seconds 
                         pONE_SECOND = 32768;
                         

@@ -11,7 +11,7 @@ module Ethernet_rx_frame
         output wire         o_rx_dv_4cd,
         output wire         o_rx_er_4cd,
         output wire [7:0]   o_rx_d4cd,
-        output wire [13:0]  osa,
+        output reg  [13:0]  osa,
         output reg          onewsa
     );
     
@@ -34,6 +34,8 @@ module Ethernet_rx_frame
     reg toggle = 1'b0;
     
     reg [13:0]      rSA = 14'b0;
+    reg [5:0]       r_MAC_low;
+    reg             r_NEW_SA_indicator='0;
 
     // Sequential logic
     always @(posedge i_rx_clk) begin 
@@ -82,14 +84,20 @@ module Ethernet_rx_frame
                 end
                 (lpSA): begin           
                     if (o_fsm_state_changed == 1) begin
+                        r_NEW_SA_indicator<=0;
                         o_fsm_state_changed <=0;                                           //   BELOW PLACE FOR CHANGE SMTH IF TEST IS NOT OKAY
                         counter <= counter - 11'b1;                                        //   BELOW PLACE FOR CHANGE SMTH IF TEST IS NOT OKAY
                     end 
+                    else if (counter == 11'd1) begin
+                        r_MAC_low<=r_data_buffer[4][5:0];
+                        counter <= counter - 11'b1;   
+                    end
                     else if (counter == 11'd0) begin
                         r_state_reg <= r_state_next;
                         o_fsm_state_changed <= 1;
                         counter <= 11'd1500;
-                        rSA <= {r_data_buffer[3][5:0],r_data_buffer[4]} ;                  // add other 8 bytes to reg
+                        rSA <= {r_MAC_low,r_data_buffer[4]} ;                  // add other 8 bytes to reg
+                        r_NEW_SA_indicator<=1;
                     end    
                     else counter <= counter - 11'b1;
                 end
@@ -237,11 +245,12 @@ module Ethernet_rx_frame
         else begin
             osa <= 14'bx;
         end
+        if ((r_NEW_SA_indicator==1)&(ishowSA==0)) begin
+        onewsa<=1;
+        end
+        else begin onewsa<=0;
+        end
     end
 
-    always @(rSA or osa) begin
-        if (osa == 14'bx) onewsa <= 1'b0;
-        else onewsa <= 1'b1;
-    end
 
 endmodule

@@ -8,6 +8,11 @@ module Ethernet_rx_frame_tb();
     reg reset;
     reg r_inv_enable;
 
+    reg             i_r_show_SA;
+    reg [13:0]      r_SA;
+    reg             r_new_SA;
+
+
     wire [2:0]  o_fsm_state;
     wire        o_fsm_state_ch;
     wire        o_rx_dv_4cd;
@@ -36,32 +41,21 @@ module Ethernet_rx_frame_tb();
         .opkt_cnt       ()
     );
 
-    //Ethernet_RX_Frame_analyzer_4cd
-    //DUT
-    //(
-    //    .i_rx_clk               (iclk),
-    //    .i_rx_dv                (wgmii_rx_val),
-    //    .i_rx_er                (reset),
-    //    .i_rx_d                 (wgmii_data),
-    //    .o_fsm_state            (o_fsm_state),
-    //    .o_fsm_state_changed    (o_fsm_state_ch),
-    //    .o_rx_dv_4cd            (o_rx_dv_4cd),
-    //    .o_rx_er_4cd            (o_rx_er_4cd),
-    //    .o_rx_d4cd              (o_rx_d4cd)
-    //);   
-
-    Ethernet_RX_frame_5cd
+    Ethernet_rx_frame
     DUT5cd
     (
         .i_rx_clk               (iclk),
         .i_rx_dv                (wgmii_rx_val),
         .i_rx_er                (reset),
         .i_rx_d                 (wgmii_data_inv),
+        .ishowSA                (i_r_show_SA),
         .o_fsm_state            (o_fsm_state2),
         .o_fsm_state_changed    (o_fsm_state_ch2),
         .o_rx_dv_4cd            (o_rx_dv_4cd2),
         .o_rx_er_4cd            (o_rx_er_4cd2),
-        .o_rx_d4cd              (o_rx_d4cd2)
+        .o_rx_d4cd              (o_rx_d4cd2),
+        .osa                    (r_SA),    
+        .onewsa                 (r_new_SA)
     );
 
     inverse_data #( .pDATA_WIDTH (8)) data_inv
@@ -85,6 +79,12 @@ module Ethernet_rx_frame_tb();
        r_inv_enable = 0;
        enable = 1;
        reset = 0;
+       #10
+       i_r_show_SA<=1;
+       #100
+       i_r_show_SA<=0;
+       #100
+       i_r_show_SA<=1;
        #600 r_inv_enable = 1;
        #4   r_inv_enable = 0;
        #1500

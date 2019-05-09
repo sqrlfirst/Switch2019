@@ -54,6 +54,7 @@ module top_module
         output wire         o_rx_er_4cd_3,
         output wire [7:0]   o_rx_d4cd_3
 );
+
     // wires for MAC_arb SA
     wire [pPORT_NUM-1:0]            wnewSA;
     wire [pPORT_NUM-1:0]            wshowSA;

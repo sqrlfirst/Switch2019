@@ -18,8 +18,6 @@ module MAC_arbiter
             o_write_en<=1;
         end
         else o_write_en<=0;
-        if (r_working_port==2'b11)
-            r_working_port<=2'b00;
         r_working_port<=r_working_port+1;
     end
 

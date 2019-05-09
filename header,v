@@ -24,3 +24,5 @@ parameter   pDATA_WIDTH        = 8,
             pFIFO_WIDTH        = $clog2(pMAX_PACKET_LENGHT),
             pDEPTH_RAM         = 2*pMAX_PACKET_LENGHT,
             pFIFO_DEPTH        = pDEPTH_RAM/pMIN_PACKET_LENGHT;
+
+parameter pPORT_NUM = 4;

@@ -10,21 +10,20 @@ module copy_packet_to_mem
                   pFIFO_DEPTH        = pDEPTH_RAM/pMIN_PACKET_LENGHT 
     )
     (
-    input wire                              iclk,
-    input wire                              i_rst,
-    input wire                              idv,
-    input wire [pDATA_WIDTH-1:0]            irx_d,
-    input wire                              irx_er,
-    input wire [pFSM_BUS_WIDHT-1:0]         iframe_state,
-    input wire                              imem_ptr,               // add pointer to mem RB
-    input wire                              ida_en,                                                                // Ended there
-    output wire                             oempty,
-    output wire                             ofull,
-    output wire [pDATA_WIDTH-1:0]           or_data,
-
-    output wire [pFIFO_WIDTH-1:0]           olen_pac, 
-    output wire [$clog2(pDEPTH_RAM)-1:0]    optr_rd,                
-    output wire [13:0]                      oPacDA                //  
+    input wire                                  iclk,
+    input wire                                  i_rst,
+    input wire                                  idv,
+    input wire [pDATA_WIDTH-1:0]                irx_d,
+    input wire                                  irx_er,
+    input wire [pFSM_BUS_WIDHT-1:0]             iframe_state,
+    input wire                                  imem_ptr,               // add pointer to mem RB
+    input wire                                  ida_en,                                                                // Ended there
+    output wire                                 oempty,
+    output wire                                 ofull,
+    output wire [pDATA_WIDTH-1:0]               or_data,
+    output wire [pFIFO_WIDTH-1:0]               olen_pac, 
+    output wire [$clog2(pDEPTH_RAM)-1:0]        optr_rd,                
+    output wire [$clog2(pMAC_MEM_DEPTH)-1:0]    oPacDA                //  
 
     );
 
@@ -52,7 +51,7 @@ module copy_packet_to_mem
     reg [pFIFO_WIDTH-1:0]              rfifo_d     = 'b0;
     reg                                rfifo_empty;
     reg                                rfifo_full;
-    reg [13:0]                         rpacda;
+    reg [$clog2(pMAC_MEM_DEPTH)-1:0]   rpacda;
     reg [2:0]                          rpacda_count;
 
     fifo                                                            // FIFO Module

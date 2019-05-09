@@ -11,17 +11,16 @@ module MAC_table
     );
 
     //Memory registers
-    reg [pADRESS-1:0]                       r_port_num [pSLOTS-1:0] ='{default: 'b0};
-    reg [pTIME-1:0]                         r_time [pSLOTS-1:0] ='{default: 'd300};
+    reg [pADRESS-1:0]                       r_port_num [pSLOTS-1:0] = '{default: 'b0};
+    reg [pTIME-1:0]                         r_time [pSLOTS-1:0] = '{default: 'd300};
 
     //Registers for counter
-    reg [$clog2(pSLOTS)-1:0]                r_d_counter='0; 
-    reg [$clog2(pONE_SECOND)-1:0]           r_FBC='0;
+    reg [$clog2(pSLOTS)-1:0]                r_d_counter = '0; 
+    reg [$clog2(pONE_SECOND)-1:0]           r_FBC = '0;
 
     always @(posedge iclk) begin
-        if (r_FBC==15'd32768) 
-           r_FBC<=0;
-        r_FBC<=r_FBC+1;
+        if (r_FBC==15'd32768) r_FBC <= 0;
+        r_FBC <= r_FBC+1;
     end
 
     always @(posedge iclk) begin //Write MAC
@@ -30,10 +29,10 @@ module MAC_table
             r_time[i_MAC_SA] <= 9'd300;
         end
         else if  (r_FBC > 'd16383) begin
-            r_d_counter<=r_d_counter+1;
-            r_time[r_d_counter]<=r_time[r_d_counter]-1;
+            r_d_counter <= r_d_counter+1;
+            r_time[r_d_counter] <= r_time[r_d_counter]-1;
         end
-    o_port_num<=r_port_num[i_MAC_DA]; //Read MAC
+        o_port_num <= r_port_num[i_MAC_DA]; //Read MAC
     end
 
 endmodule

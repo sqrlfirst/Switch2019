@@ -143,7 +143,7 @@ MAC_table MAC_table
 .i_write_enable     (wwr_en),
 .i_port_num         (wport_num),
 .i_MAC_SA           (wosa),
-.i_MAC_DA           (),
+.i_MAC_DA           (i_MAC_DA),
 .o_port_num         (MAC_table_port_num)
 );
 endmodule

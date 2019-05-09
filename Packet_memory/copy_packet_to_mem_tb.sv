@@ -1,6 +1,6 @@
 module copy_packet_to_mem_tb;
 
-    reg                     iclk      ;         
+    reg                     iclk ;         
     reg                     i_rst     ;
     wire                    wdv       ;
     wire [7:0]              wrx_d     ;         // 7:0
@@ -9,10 +9,10 @@ module copy_packet_to_mem_tb;
     reg                     ird_en    = 'b0;
     wire                    oempty         ;
     wire                    ofull          ;
-    wire [7:0]                    or_data        ;
-    wire [10:0]                   olen_pac       ;
+    wire [7:0]              or_data        ;
+    wire [10:0]             olen_pac       ;
     wire                    onext_last     ;
-    wire [11:0]                   obytes_to_read; 
+    wire [11:0]             obytes_to_read; 
     wire                    ofifo_em   ;   
     wire                    ofifo_full ;    
     

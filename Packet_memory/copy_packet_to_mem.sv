@@ -23,7 +23,7 @@ module copy_packet_to_mem
     output wire [pDATA_WIDTH-1:0]           or_data,
 
     output wire [pFIFO_WIDTH-1:0]           olen_pac, 
-    output reg []
+    output wire [$clog2(pDEPTH_RAM)-1:0]    optr_rd,                
     output wire [13:0]                      oPacDA                //  
 
     );
@@ -35,6 +35,9 @@ module copy_packet_to_mem
     // Read pointers and counter
     reg [$clog2(pDEPTH_RAM)-1:0]       rRd_ptr_succ = '0;           // Last successfull pointer            
     reg [$clog2(pDEPTH_RAM)-1:0]       rRd_ptr_now  = '0;
+
+    wire [$clog2(pDEPTH_RAM)-1:0]       wRd_ptr_readen  = '0;
+
     reg [$clog2(pDEPTH_RAM)-1:0]       rRd_count    = '0;     
 
     // Write pointers and counter
@@ -142,35 +145,21 @@ module copy_packet_to_mem
 
     // Read data
     always @(posedge iclk) begin
-        if (ird_en) begin 
-            if (rRd_count != 'b0) begin
-                if ((rWr_ptr_now + 'b1) > pDEPTH_RAM) begin
-                    rRd_count    <= rRd_count - 'b1;
-                    rRd_ptr_now  <= 'b0;
-                    rRd_ptr_succ <= 'd0;
-                end
-                else begin
-                    rRd_count   <= rRd_count - 'b1;
-                    rRd_ptr_now <= rRd_ptr_now + 'b1;    
-                end
-                rfifo_rd_en <= 'b0;
-            end
-            else begin
-                rRd_count   <= olen_pac + 1'b1;
-                rfifo_rd_en <= 'b1;
-            end
+        if (rRd_ptr_now == wRd_ptr_readen) begin
+            rRd_ptr_succ <= wRd_ptr_readen;                 // packet is readen, len and ptr
+            rfifo_rd_en <= 1'b1;                            // needed to be updated
         end
         else begin
-            rRd_count    <= 'b0;
-            rRd_ptr_succ <= rRd_ptr_now;
+            rRd_ptr_now <= imem_ptr;
+            rfifo_rd_en <= 1'b0;
         end
     end
 
-    // read Da function
+    // read DA function
     always @(posedge iclk) begin
         if (iframe_state = lpDA) begin
             if (rpacda_count == 3'd1)      rpacda[13:8] <= irx_d[5:0];
-            else if (rpacda_count == 3'd0) rpacda[7:0] <= ird;
+            else if (rpacda_count == 3'd0) rpacda[7:0]  <= ird;
             else                           rpacda_count <= rpacda_count - 1;
         end
         else rpacda_count <= 3'd5;
@@ -190,5 +179,8 @@ module copy_packet_to_mem
     // read_counter_output
     assign obytes_to_read = rRd_count;
 
+    assign optr_rd = rRd_ptr_succ;
+
+    assign wRd_ptr_readen = rRd_ptr_succ + olen_pac;
 endmodule
  

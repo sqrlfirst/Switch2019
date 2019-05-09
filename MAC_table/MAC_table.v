@@ -4,10 +4,10 @@ module MAC_table
     (
         input wire                                  iclk,
         input wire                                  i_write_enable,
-        input wire [$clog2(pPORT_NUM)-1:0]                    i_port_num,
-        input wire [$clog2(pSLOTS)-1:0]                       i_MAC_SA,
-        input wire [$clog2(pSLOTS)-1:0]                       i_MAC_DA,
-        output reg [$clog2(pPORT_NUM)-1:0]                    o_port_num
+        input wire [$clog2(pPORT_NUM)-1:0]          i_port_num,
+        input wire [$clog2(pSLOTS)-1:0]             i_MAC_SA,
+        input wire [$clog2(pSLOTS)-1:0]             i_MAC_DA,
+        output reg [$clog2(pPORT_NUM)-1:0]          o_port_num
     );
 
     //Memory registers

@@ -17,8 +17,6 @@ module top_module
         output wire         o_rx_er_4cd_0,
         output wire [7:0]   o_rx_d4cd_0,
         
-
-
         input wire          i_rx_clk_1,    // GMII1 
         input wire          i_rx_dv_1,     // GMII1
         input wire          i_rx_er_1,     // GMII1 
@@ -29,8 +27,6 @@ module top_module
         output wire         o_rx_dv_4cd_1,
         output wire         o_rx_er_4cd_1,
         output wire [7:0]   o_rx_d4cd_1,
-        
-
 
         input wire          i_rx_clk_2,    // GMII2 
         input wire          i_rx_dv_2,     // GMII2
@@ -43,8 +39,6 @@ module top_module
         output wire         o_rx_er_4cd_2,
         output wire [7:0]   o_rx_d4cd_2,
         
-
-
         input wire          i_rx_clk_3,    // GMII3 
         input wire          i_rx_dv_3,     // GMII3
         input wire          i_rx_er_3,     // GMII3 
@@ -63,7 +57,6 @@ module top_module
     wire [$clog2(pPORT_NUM)-1:0]    wport_num;
     wire                            wwr_en;
     wire [13:0]                     wosa;
-
     // wires for out of Ethrenet to mem 0     
     wire                            wdv0;      
     wire [7:0]                      wrx_d0;     

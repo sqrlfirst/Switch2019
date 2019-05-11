@@ -162,7 +162,8 @@ module Ethernet_rx_frame
         // Combinational logic
         always @* begin
             case(r_state_reg)
-                lpND:       r_state_next <= lpPRE;
+                lpND:       r_state_n
+                ext <= lpPRE;
                 lpPRE:      r_state_next <= lpSFD;
                 lpSFD:      r_state_next <= lpDA;
                 lpDA:       r_state_next <= lpSA;

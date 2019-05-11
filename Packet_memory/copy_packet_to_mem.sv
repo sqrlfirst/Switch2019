@@ -1,6 +1,6 @@
 `include "header.v"
 
-module copy_packet_to_mem 
+module copy_packet_to_mem //Переделать
     #(
         parameter pDATA_WIDTH        = 8,                     
                   pMIN_PACKET_LENGHT = 64,

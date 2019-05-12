@@ -22,7 +22,7 @@ module copy_packet_to_mem //Переделать
     output wire                                         ofull_sram,
     output wire                                         oempty_fifo,
     output wire                                         ofull_fifo,
-    output wire [pFIFO_WIDTH+$clog2(pDEPTH_RAM):0]      olen_plus_ptr,
+    output wire [pFIFO_WIDTH+$clog2(pDEPTH_RAM)-1:0]    olen_plus_ptr,
     output wire [$clog2(pMAC_MEM_DEPTH)-1:0]            oda,                
     output wire                                         ovalid,             // Avalon-ST
     output wire [pDATA_WIDTH=1:0]                       odata,              // Avalon-ST

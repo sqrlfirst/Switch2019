@@ -244,7 +244,7 @@ module Ethernet_rx_frame
             osa <= rSA;
         end
         else begin
-            osa <= 14'bx;
+            osa <= 14'bz;
         end
         if ((r_NEW_SA_indicator==1)&(ishowSA==0)) begin
         onewsa<=1;

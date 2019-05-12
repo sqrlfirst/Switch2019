@@ -24,12 +24,12 @@ module copy_packet_to_mem //Переделать
     output reg                                              ofull_fifo,
     output wire [pFIFO_WIDTH+$clog2(pDEPTH_RAM)-1:0]        olen_plus_ptr,
     output wire [$clog2(pMAC_MEM_DEPTH)-1:0]                oda,                
-    output wire                                             ovalid,             // Avalon-ST
+    output reg                                              ovalid,             // Avalon-ST
     output wire [pDATA_WIDTH=1:0]                           odata,              // Avalon-ST
     output wire                                             oerror              // Avalon-ST
     output wire [3:0]                                       ochannel            // Avalon-ST
-    output wire                                             ostartofpacket,     // Avalon-ST
-    output wire                                             oendofpacket        // Avalon-ST
+    output reg                                              ostartofpacket,     // Avalon-ST
+    output reg                                              oendofpacket        // Avalon-ST
     );
 
     // Write_FSM reg
@@ -187,6 +187,11 @@ module copy_packet_to_mem //Переделать
     end
 
     // Show data to out for pre_arb
+    always @(posedge iclk) begin
+        if(ird_en) begin
+            olen_plus
+        end
+    end
     
 
     // Read and write pointers check

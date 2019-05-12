@@ -10,21 +10,26 @@ module copy_packet_to_mem //Переделать
                   pFIFO_DEPTH        = pDEPTH_RAM/pMIN_PACKET_LENGHT 
     )
     (
-    input wire                                  iclk,
-    input wire                                  i_rst,
-    input wire                                  idv,
-    input wire [pDATA_WIDTH-1:0]                irx_d,
-    input wire                                  irx_er,
-    input wire [pFSM_BUS_WIDHT-1:0]             iframe_state,
-    input wire                                  imem_ptr,               // add pointer to mem RB
-    input wire                                  ida_en,                                                                // Ended there
-    output wire                                 oempty,
-    output wire                                 ofull,
-    output wire [pDATA_WIDTH-1:0]               or_data,
-    output wire [pFIFO_WIDTH-1:0]               olen_pac, 
-    output wire [$clog2(pDEPTH_RAM)-1:0]        optr_rd,                
-    output wire [$clog2(pMAC_MEM_DEPTH)-1:0]    oPacDA                //  
-
+    input wire                                          iclk,
+    input wire                                          irst,
+    input wire                                          idv,
+    input wire [pDATA_WIDTH-1:0]                        irx_d,
+    input wire                                          irx_er,
+    input wire [pFSM_BUS_WIDHT-1:0]                     iframe_state,
+    input wire                                          ird_en,             // for pre_arb
+    input wire                                          iready,             // Avalon-ST                                                                // Ended there
+    output wire                                         oempty_sram,
+    output wire                                         ofull_sram,
+    output wire                                         oempty_fifo,
+    output wire                                         ofull_fifo,
+    output wire [pFIFO_WIDTH+$clog2(pDEPTH_RAM):0]      olen_plus_ptr,
+    output wire [$clog2(pMAC_MEM_DEPTH)-1:0]            oda,                
+    output wire                                         ovalid,             // Avalon-ST
+    output wire [pDATA_WIDTH=1:0]                       odata,              // Avalon-ST
+    output wire                                         oerror              // Avalon-ST
+    output wire [:]                                     ochannel            // Avalon-ST
+    output wire                                         ostartofpacket,     // Avalon-ST
+    output wire                                         oendofpacket        // Avalon-ST
     );
 
     // Write_FSM reg
@@ -58,7 +63,23 @@ module copy_packet_to_mem //Переделать
     #(                                                              // ===========
         .pBITS                  (pFIFO_WIDTH),                      // Contains lenght of received packet, 
         .pWIDHT                 (pFIFO_DEPTH)                       // that lenght summed with last successful 
-    ) lenght_of_packet                                              // read pointer gives us information about
+    ) memory_to_out                                                 // read pointer gives us information about
+    (                                                               // end of packet.
+        .iclk                   (iclk),
+        .ireset                 (i_rst),
+        .ird                    (rfifo_rd_en),                 
+        .iwr                    (rfifo_wr_en),              
+        .iw_data                (rfifo_d),                  
+        .oempty                 (rfifo_empty),
+        .ofull                  (rfifo_full),
+        .or_data                (olen_pac)
+    );
+
+    fifo                                                            // FIFO Module
+    #(                                                              // ===========
+        .pBITS                  (pFIFO_WIDTH),                      // Contains lenght of received packet, 
+        .pWIDHT                 (pFIFO_DEPTH)                       // that lenght summed with last successful 
+    ) memory_for_reading                                            // read pointer gives us information about
     (                                                               // end of packet.
         .iclk                   (iclk),
         .ireset                 (i_rst),
@@ -177,9 +198,8 @@ module copy_packet_to_mem //Переделать
     assign oempty = (rWr_ptr_succ == rRd_ptr_succ) ?  1'b1 : 1'b0;
     // read_counter_output
     assign obytes_to_read = rRd_count;
-
     assign optr_rd = rRd_ptr_succ;
-
     assign wRd_ptr_readen = rRd_ptr_succ + olen_pac;
+
 endmodule
  

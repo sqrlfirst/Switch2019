@@ -10,26 +10,26 @@ module copy_packet_to_mem //Переделать
                   pFIFO_DEPTH        = pDEPTH_RAM/pMIN_PACKET_LENGHT 
     )
     (
-    input wire                                          iclk,
-    input wire                                          irst,
-    input wire                                          idv,
-    input wire [pDATA_WIDTH-1:0]                        irx_d,
-    input wire                                          irx_er,
-    input wire [pFSM_BUS_WIDHT-1:0]                     iframe_state,
-    input wire                                          ird_en,             // for pre_arb
-    input wire                                          iready,             // Avalon-ST                                                                // Ended there
-    output wire                                         oempty_sram,
-    output wire                                         ofull_sram,
-    output wire                                         oempty_fifo,
-    output wire                                         ofull_fifo,
-    output wire [pFIFO_WIDTH+$clog2(pDEPTH_RAM):0]      olen_plus_ptr,
-    output wire [$clog2(pMAC_MEM_DEPTH)-1:0]            oda,                
-    output wire                                         ovalid,             // Avalon-ST
-    output wire [pDATA_WIDTH=1:0]                       odata,              // Avalon-ST
-    output wire                                         oerror              // Avalon-ST
-    output wire [:]                                     ochannel            // Avalon-ST
-    output wire                                         ostartofpacket,     // Avalon-ST
-    output wire                                         oendofpacket        // Avalon-ST
+    input wire                                              iclk,
+    input wire                                              irst,
+    input wire                                              idv,
+    input wire [pDATA_WIDTH-1:0]                            irx_d,
+    input wire                                              irx_er,
+    input wire [pFSM_BUS_WIDHT-1:0]                         iframe_state,
+    input wire                                              ird_en,             // for pre_arb
+    input wire                                              iready,             // Avalon-ST                                                                // Ended there
+    output wire                                             oempty_sram,
+    output wire                                             ofull_sram,
+    output reg                                              oempty_fifo,
+    output reg                                              ofull_fifo,
+    output wire [pFIFO_WIDTH+$clog2(pDEPTH_RAM)-1:0]        olen_plus_ptr,
+    output wire [$clog2(pMAC_MEM_DEPTH)-1:0]                oda,                
+    output wire                                             ovalid,             // Avalon-ST
+    output wire [pDATA_WIDTH=1:0]                           odata,              // Avalon-ST
+    output wire                                             oerror              // Avalon-ST
+    output wire [3:0]                                       ochannel            // Avalon-ST
+    output wire                                             ostartofpacket,     // Avalon-ST
+    output wire                                             oendofpacket        // Avalon-ST
     );
 
     // Write_FSM reg
@@ -40,7 +40,6 @@ module copy_packet_to_mem //Переделать
     reg [$clog2(pDEPTH_RAM)-1:0]       rRd_ptr_succ = '0;           // Last successfull pointer            
     reg [$clog2(pDEPTH_RAM)-1:0]       rRd_ptr_now  = '0;
 
-    wire [$clog2(pDEPTH_RAM)-1:0]       wRd_ptr_readen  = '0;
 
     reg [$clog2(pDEPTH_RAM)-1:0]       rRd_count    = '0;     
 
@@ -51,44 +50,47 @@ module copy_packet_to_mem //Переделать
     reg                                rWr_en       = '0;
 
     // Memory contol registers
-    reg                                rfifo_rd_en = 'b0;
-    reg                                rfifo_wr_en = 'b0;
-    reg [pFIFO_WIDTH-1:0]              rfifo_d     = 'b0;
-    reg                                rfifo_empty;
-    reg                                rfifo_full;
-    reg [$clog2(pMAC_MEM_DEPTH)-1:0]   rpacda;
-    reg [2:0]                          rpacda_count;
+    reg                                             rfifo_rd_en_out = 'b0;
+    reg                                             rfifo_rd_en_read = 'b0;
+    reg                                             rfifo_wr_en = 'b0;
+    reg [pFIFO_DEPTH+$clog2(pDEPTH_RAM)+
+         $clog2(pMAC_MEM_DEPTH)-1:0]                rgeneralfifo_d     = 'b0;
+    
 
-    fifo                                                            // FIFO Module
-    #(                                                              // ===========
-        .pBITS                  (pFIFO_WIDTH),                      // Contains lenght of received packet, 
-        .pWIDHT                 (pFIFO_DEPTH)                       // that lenght summed with last successful 
-    ) memory_to_out                                                 // read pointer gives us information about
-    (                                                               // end of packet.
+    reg [2:0]                                       rpacda_count;
+
+    fifo                                                                                // FIFO Module
+    #(                                                                                  // ===========
+        .pBITS                  (pFIFO_WIDTH),                                          // Contains lenght of received packet, 
+        .pWIDHT                 (pFIFO_DEPTH+$clog2(pDEPTH_RAM)+
+                                 $clog2(pMAC_MEM_DEPTH))                                // that lenght summed with last successful 
+    ) memory_to_out                                                                     // read pointer gives us information about
+    (                                                                                   // end of packet.
         .iclk                   (iclk),
         .ireset                 (i_rst),
-        .ird                    (rfifo_rd_en),                 
+        .ird                    (rfifo_rd_en_out),                 
         .iwr                    (rfifo_wr_en),              
-        .iw_data                (rfifo_d),                  
-        .oempty                 (rfifo_empty),
-        .ofull                  (rfifo_full),
-        .or_data                (olen_pac)
+        .iw_data                (rgeneralfifo_d),                  
+        .oempty                 (oempty_fifo),
+        .ofull                  (ofull_fifo),
+        .or_data                ({olen_plus_ptr,oda})
     );
 
-    fifo                                                            // FIFO Module
-    #(                                                              // ===========
-        .pBITS                  (pFIFO_WIDTH),                      // Contains lenght of received packet, 
-        .pWIDHT                 (pFIFO_DEPTH)                       // that lenght summed with last successful 
-    ) memory_for_reading                                            // read pointer gives us information about
-    (                                                               // end of packet.
+    fifo                                                                                // FIFO Module
+    #(                                                                                  // ===========
+        .pBITS                  (pFIFO_WIDTH),                                          // Contains lenght of received packet, 
+        .pWIDHT                 (pFIFO_DEPTH+$clog2(pDEPTH_RAM))                        // that lenght summed with last successful 
+    ) memory_for_reading                                                                // read pointer gives us information about
+    (                                                                                   // end of packet.
         .iclk                   (iclk),
         .ireset                 (i_rst),
-        .ird                    (rfifo_rd_en),                 
+        .ird                    (rfifo_rd_en_read),                 
         .iwr                    (rfifo_wr_en),              
-        .iw_data                (rfifo_d),                  
-        .oempty                 (rfifo_empty),
-        .ofull                  (rfifo_full),
-        .or_data                (olen_pac)
+        .iw_data                (rgeneralfifo_d[pFIFO_DEPTH+$clog2(pDEPTH_RAM)+
+                                                $clog2(pMAC_MEM_DEPTH)-1:$clog2(pMAC_MEM_DEPTH)]),                  
+        .oempty                 (),                             /// ????? 
+        .ofull                  (),                             /// ????? 
+        .or_data                ()                              /// ????? 
     );
 
     sram                                                            // SRAM Module
@@ -148,7 +150,8 @@ module copy_packet_to_mem //Переделать
                     end
                     else begin
                         rfifo_wr_en <= 1'b1;
-                        rfifo_d     <= rWr_count;
+                        rgeneralfifo_d[pFIFO_DEPTH+$clog2(pDEPTH_RAM)+$clog2(pMAC_MEM_DEPTH)-1:
+                                       $clog2(pMAC_MEM_DEPTH)]                                  <= {rWr_count,rWr_ptr_now};
                     end
                 end
             end
@@ -163,43 +166,35 @@ module copy_packet_to_mem //Переделать
         endcase
     end
 
-    // Read data
+    // Read data to Avalon-ST
     always @(posedge iclk) begin
-        if (rRd_ptr_now == wRd_ptr_readen) begin
-            rRd_ptr_succ <= wRd_ptr_readen;                 // packet is readen, len and ptr
-            rfifo_rd_en <= 1'b1;                            // needed to be updated
+        if(iready) begin
+            
         end
         else begin
-            rRd_ptr_now <= imem_ptr;
-            rfifo_rd_en <= 1'b0;
+            
         end
     end
 
     // read DA function
     always @(posedge iclk) begin
         if (iframe_state = lpDA) begin
-            if (rpacda_count == 3'd1)      rpacda[13:8] <= irx_d[5:0];
-            else if (rpacda_count == 3'd0) rpacda[7:0]  <= ird;
+            if (rpacda_count == 3'd1)      rgeneralfifo_d[$clog2(pMAC_MEM_DEPTH)-1:8]] <= irx_d[5:0];
+            else if (rpacda_count == 3'd0) rgeneralfifo_d[7:0]  <= ird;
             else                           rpacda_count <= rpacda_count - 1;
         end
         else rpacda_count <= 3'd5;
     end
 
-    // Show DA func
-    always @(posedge iclk) begin
-        if (ida_en) oPacDA <= rpacda;                                                             // SEEMS that we have som problems  
-        oPacDA <= 13'bx; 
-    end
+    // Show data to out for pre_arb
+    
 
     // Read and write pointers check
-    assign ofull = (((rWr_ptr_succ > rRd_ptr_succ) ? 
-                     (rWr_ptr_succ - rRd_ptr_succ) : 
-                     (rRd_ptr_succ - rWr_ptr_succ)) > pMAX_PACKET_LENGHT) ? 1'b1 : 1'b0;
-    assign oempty = (rWr_ptr_succ == rRd_ptr_succ) ?  1'b1 : 1'b0;
-    // read_counter_output
-    assign obytes_to_read = rRd_count;
-    assign optr_rd = rRd_ptr_succ;
-    assign wRd_ptr_readen = rRd_ptr_succ + olen_pac;
+    assign ofull_sram = (((rWr_ptr_succ > rRd_ptr_succ) ? 
+                          (rWr_ptr_succ - rRd_ptr_succ) : 
+                          (rRd_ptr_succ - rWr_ptr_succ)) > pMAX_PACKET_LENGHT) ? 1'b1 : 1'b0;
+    assign oempty_sram = (rWr_ptr_succ == rRd_ptr_succ) ?  1'b1 : 1'b0;
+    
 
 endmodule
  

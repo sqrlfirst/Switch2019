@@ -6,11 +6,10 @@ module pre_arbiter_0
         input wire                                  iclk,       // Signal declaration
         input wire                                  i_w_permition,                         
         input wire [$clog2(pPORT_NUM)-1:0]          i_port_num,            
-        input wire [pFIFO_WIDTH-1:0]                i_length,
-        input wire [$clog2(pDEPTH_RAM)-1:0]         i_pointer,
-        output reg                                  o_FIFO_1;
-        output reg                                  o_FIFO_2;
-        output reg                                  o_FIFO_3;
+        input wire [pFIFO_WIDTH-1:0]                i_length_ptr,
+        output reg []                               o_FIFO_1,
+        output reg []                               o_FIFO_2,
+        output reg []                               o_FIFO_3,
         output wire                                 o_request
     );  
 
@@ -20,7 +19,9 @@ module pre_arbiter_0
         reg             r_state = lpWAIT_PRE;
         reg             r_state_next = lpWORK_PRE;
     
-        reg             r_request;
+        reg             r_request='0;
+        reg [1:0]       r_counter='0;
+        reg []          r_buffer;
 
         always @* begin
             case(r_state)
@@ -29,23 +30,38 @@ module pre_arbiter_0
             endcase  
         end
 
-        always @(posedge iclk)
+        always @(posedge iclk) begin
         case (r_state)
             lpWAIT_PRE: begin
                             if (i_w_permition)
                             r_state<=r_state_next;
                         end 
             lpWORK_PRE: begin
-                            r_request<=1;
-                            case (i_port_num)
-                            2'b01: o_FIFO_1<={i_length,i_pointer};
-                            2'b10: o_FIFO_2<={i_length,i_pointer}
-                            2'b11: o_FIFO_3<={i_length,i_pointer}
+                        case (r_counter)
+                            2'b00: begin   
+                                   r_request<=1;
+                                   r_counter<=r_counter+1;
+                            end
+                            2'b01: begin
+                                   r_buffer<=i_length_ptr;
+                                   r_counter<=r_counter+1;
+                            end
+                            2'b10: begin
+                                   case (i_port_num)
+                            2'b01: o_FIFO_1<={i_length_ptr};
+                            2'b10: o_FIFO_2<={i_length_ptr};
+                            2'b11: o_FIFO_3<={i_length_ptr};
+                                   endcase
+                            r_state<=r_state_next;
+                             r_counter<=0;
+                            end
                         end
+            endcase
+            end
 
 
 
         assign o_request=r_request;
-
+endmodule
         
 

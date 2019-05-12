@@ -7,7 +7,10 @@ module MAC_table
         input wire [$clog2(pPORT_NUM)-1:0]          i_port_num,
         input wire [$clog2(pMAC_MEM_DEPTH)-1:0]     i_MAC_SA,
         input wire [$clog2(pMAC_MEM_DEPTH)-1:0]     i_MAC_DA,
-        output reg [$clog2(pPORT_NUM)-1:0]          o_port_num
+        output reg [$clog2(pPORT_NUM)-1:0]          o_port_num_0, // For pre_arbiter_0
+        output reg [$clog2(pPORT_NUM)-1:0]          o_port_num_1,
+        output reg [$clog2(pPORT_NUM)-1:0]          o_port_num_2,
+        output reg [$clog2(pPORT_NUM)-1:0]          o_port_num_3
     );
 
     //Memory registers
@@ -32,7 +35,10 @@ module MAC_table
             r_d_counter <= r_d_counter+1;
             r_time[r_d_counter] <= r_time[r_d_counter]-1;
         end
-        o_port_num <= r_port_num[i_MAC_DA]; //Read MAC
+        o_port_num_0 <= r_port_num[i_MAC_DA]; //Read MAC
+        o_port_num_1 <= r_port_num[i_MAC_DA];
+        o_port_num_2 <= r_port_num[i_MAC_DA];
+        o_port_num_3 <= r_port_num[i_MAC_DA];        
     end
 
 endmodule

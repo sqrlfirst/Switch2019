@@ -3,25 +3,25 @@
 module pre_arbiter_0
 
     ( 
-        input wire                                  iclk,       // Signal declaration
-        input wire                                  i_w_permition,                         
-        input wire [$clog2(pPORT_NUM)-1:0]          i_port_num,            
-        input wire [pFIFO_WIDTH-1:0]                i_length_ptr,
-        output reg []                               o_FIFO_1,
-        output reg []                               o_FIFO_2,
-        output reg []                               o_FIFO_3,
-        output wire                                 o_request
+        input wire                                                                    iclk,       // Signal declaration
+        input wire                                                                    i_w_permition,                         
+        input wire [$clog2(pPORT_NUM)-1:0]                                            i_port_num,            
+        input wire [pFIFO_WIDTH-1:0]                                                  i_length_ptr,
+        output reg [pFIFO_WIDTH+$clog2(pDEPTH_RAM)-1:0]                               o_FIFO_1,
+        output reg [pFIFO_WIDTH+$clog2(pDEPTH_RAM)-1:0]                               o_FIFO_2,
+        output reg [pFIFO_WIDTH+$clog2(pDEPTH_RAM)-1:0]                               o_FIFO_3,
+        output wire                                                                   o_request
     );  
 
         localparam lpWAIT_PRE=1'b0;
         localparam lpWORK_PRE=1'b1; 
      
-        reg             r_state = lpWAIT_PRE;
-        reg             r_state_next = lpWORK_PRE;
+        reg                                               r_state = lpWAIT_PRE;
+        reg                                               r_state_next = lpWORK_PRE;
     
-        reg             r_request='0;
-        reg [1:0]       r_counter='0;
-        reg []          r_buffer;
+        reg                                               r_request='0;
+        reg [1:0]                                         r_counter='0;
+        reg [pFIFO_WIDTH+$clog2(pDEPTH_RAM)-1:0]          r_buffer;
 
         always @* begin
             case(r_state)

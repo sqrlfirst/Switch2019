@@ -84,7 +84,6 @@ module Ethernet_rx_frame
                 end
                 (lpSA): begin           
                     if (o_fsm_state_changed == 1) begin
-                        r_NEW_SA_indicator<=0;
                         o_fsm_state_changed <=0;                                           //   BELOW PLACE FOR CHANGE SMTH IF TEST IS NOT OKAY
                         counter <= counter - 11'b1;                                        //   BELOW PLACE FOR CHANGE SMTH IF TEST IS NOT OKAY
                     end 
@@ -111,6 +110,8 @@ module Ethernet_rx_frame
                         r_rx_dv_buffer <= 5'b0;
                         r_rx_er_buffer <= 5'b0;
                     end  
+                    else if (counter == 11'd1490)
+                        r_NEW_SA_indicator<=0; 
                     else counter <= counter - 11'b1;
                 end
             endcase   
@@ -162,8 +163,7 @@ module Ethernet_rx_frame
         // Combinational logic
         always @* begin
             case(r_state_reg)
-                lpND:       r_state_n
-                ext <= lpPRE;
+                lpND:       r_state_next <= lpPRE;
                 lpPRE:      r_state_next <= lpSFD;
                 lpSFD:      r_state_next <= lpDA;
                 lpDA:       r_state_next <= lpSA;

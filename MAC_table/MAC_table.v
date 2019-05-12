@@ -14,8 +14,8 @@ module MAC_table
     );
 
     //Memory registers
-    reg [$clog2(pPORT_NUM)-1:0]                       r_port_num [pSLOTS-1:0] = '{default: 'b0};
-    reg [pTIME-1:0]                                   r_time [pSLOTS-1:0] = '{default: 'd300};
+    reg [$clog2(pPORT_NUM)-1:0]                       r_port_num [pMAC_MEM_DEPTH-1:0] = '{default: 'b0};
+    reg [pTIME-1:0]                                   r_time [pMAC_MEM_DEPTH-1:0] = '{default: 'd300};
 
     //Registers for counter
     reg [$clog2(pMAC_MEM_DEPTH)-1:0]                r_d_counter = '0; 

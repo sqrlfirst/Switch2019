@@ -17,7 +17,7 @@ integer i = 3;
 //переменные для модуля crc32
 reg after_d;
 reg load_end;
-reg crc_eth;
+reg crc_eth_en;
 
 //state of FSM
 localparam [2:0] stIGP=3'b0, stPREAMBLE=3'b1, stSFD=3'b10, stDADDR=3'b11, stSADDR=3'b100, stLENTYPE=3'b101, stDATA=3'b110, stFCS = 3'b111;
@@ -28,13 +28,13 @@ localparam [31:0] lCRC32 = 32'h04C11DB7;//пораждающий полином
 initial begin
     count <= 'b0;//счетчик в 0
     rcurst <= stIGP;//начальное состояние КА
-    rcrc <= 0;//все биты crc в нули
-    rlendata <= 0;
+    rlendata <= 'b0;
 
     //переменные для модуля crc32
     after_d <= 0;
     load_end <= 0;
-    crc_eth <= 0;
+    crc_eth_en
+ <= 0;
 end
 
 eth_crc32_cnt gen_eth_crc32 
@@ -42,7 +42,7 @@ eth_crc32_cnt gen_eth_crc32
 .ieth_clk               (iclk),
 .iafter_d5              (after_d),
 .ipayload_end           (load_end),
-.ieth_ena               (crc_eth),
+.ieth_ena               (crc_eth_en),
 .ieth_data              (idata_byte),
 .ocrc32_data            (rcrc)
 );
@@ -69,11 +69,13 @@ always @(posedge iclk) begin
             if(ienable & count>lPAUSE-2)begin
                 rcurst <= rnextst;
                 count <= 0; 
+                i <= 3;
+                rbyte<=idata_byte;
             end
             else begin
                 count <= count + 1;
             end
-            rbyte<=idata_byte;
+            //rbyte<=idata_byte;
         end
 
         stPREAMBLE: begin
@@ -82,14 +84,14 @@ always @(posedge iclk) begin
             else begin
                 rcurst <= rnextst;
                 count <= 0;
+                after_d <= 1;
+                crc_eth_en<= 1;
             end
             rbyte<=idata_byte;
         end
         stSFD: begin
                 rcurst <= rnextst;
                 count <= 0;
-                after_d <= 1;
-                crc_eth <= 1;
                 rbyte<=idata_byte;
         end
         stDADDR: begin
@@ -123,13 +125,15 @@ always @(posedge iclk) begin
         stDATA: begin
             if (rlendata > 1) begin
                 rlendata <= rlendata-1;
+                rbyte<=idata_byte;
             end
             else begin
                 rcurst <= rnextst;
                 load_end <= 1;
-                 crc_eth <= 0;
+                crc_eth_en<= 0;
+                rbyte<=rcrc[i];
+                i=i-1;
             end
-            rbyte<=idata_byte;
         end
         stFCS: begin
             load_end = 0;
@@ -140,10 +144,8 @@ always @(posedge iclk) begin
             count <= 0;
             after_d <= 0;
             end
-            if(count > 0) begin
                 rbyte<=rcrc[i];
                 i=i-1;
-            end
         end
     endcase
 end

@@ -1,0 +1,36 @@
+module FSM_frame_vlg_tst();
+// constants                                           
+// general purpose registers
+// test vector input registers
+reg iclk;
+reg [7:0] idata_byte;
+reg ienable;
+reg [10:0] ilen;
+// wires                                               
+wire [7:0]  obyte;
+wire [2:0]  ost;
+
+// assign statements (if any)                          
+FSM_frame i1 (
+// port map - connection between master ports and signals/registers   
+	.iclk(iclk),
+	.idata_byte(idata_byte),
+	.ienable(ienable),
+	.ilen(ilen),
+	.obyte(obyte),
+	.ost(ost)
+);
+initial                                                
+begin                                                                                       
+$display("Running testbench");     
+ienable <=1;
+ilen <=10;
+iclk <=1;      
+idata_byte<=1;  
+end                                                    
+always                                                        
+begin                                                                   
+#10  iclk =  !iclk;                             
+end                                                   
+endmodule
+

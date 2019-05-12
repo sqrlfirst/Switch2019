@@ -161,76 +161,99 @@ module top_module
         .o_port_num         (oMAC_table_port_num)
     );
 
-    copy_packet_to_mem mem0
+    copy_packet_to_mem mem0 
     (
-        .iclk               (i_rx_clk_0),
-        .i_rst              (),
-        .idv                (wdv0),
-        .irx_d              (wrx_d0),
-        .irx_er             (wrx_er0),
-        .iframe_state       (wfsm_state0),
-        .imem_ptr           (),           
-        .ida_en             (),                                                                // Ended there
-        .oempty             (),
-        .ofull              (),
-        .or_data            (),
-        .olen_pac           (), 
-        .optr_rd            (),                
-        .oPacDA             ()      
+        .iclk                                (),
+        .irst                                (),
+        .idv                                 (),
+        .irx_d                               (),
+        .irx_er                              (),
+        .iframe_state                        (),
+        .ird_en                              (),              // for pre_arb
+        .iready                              (),              // Avalon-ST                                                                // Ended there
+        .oempty_sram                         (),
+        .ofull_sram                          (),
+        .oempty_fifo                         (),
+        .ofull_fifo                          (),
+        .olen_plus_ptr                       (),
+        .oda                                 (),                
+        .ovalid                              (),              // Avalon-ST
+        .odata                               (),              // Avalon-ST
+        .oerror                              (),              // Avalon-ST
+        .ochannel                            (),              // Avalon-ST
+        .ostartofpacket                      (),              // Avalon-ST
+        .oendofpacket                        ()               // Avalon-ST
     );
 
-    copy_packet_to_mem mem1
+    copy_packet_to_mem mem1 
     (
-        .iclk               (i_rx_clk_1),
-        .i_rst              (),
-        .idv                (wdv1),
-        .irx_d              (wrx_d1),
-        .irx_er             (wrx_er1),
-        .iframe_state       (wfsm_state1),
-        .imem_ptr           (),          
-        .ida_en             (),                                                                // Ended there
-        .oempty             (),
-        .ofull              (),
-        .or_data            (),
-        .olen_pac           (), 
-        .optr_rd            (),                
-        .oPacDA             ()      
+        .iclk                                (),
+        .irst                                (),
+        .idv                                 (),
+        .irx_d                               (),
+        .irx_er                              (),
+        .iframe_state                        (),
+        .ird_en                              (),              // for pre_arb
+        .iready                              (),              // Avalon-ST                                                                // Ended there
+        .oempty_sram                         (),
+        .ofull_sram                          (),
+        .oempty_fifo                         (),
+        .ofull_fifo                          (),
+        .olen_plus_ptr                       (),
+        .oda                                 (),                
+        .ovalid                              (),              // Avalon-ST
+        .odata                               (),              // Avalon-ST
+        .oerror                              (),              // Avalon-ST
+        .ochannel                            (),              // Avalon-ST
+        .ostartofpacket                      (),              // Avalon-ST
+        .oendofpacket                        ()               // Avalon-ST
     );
 
-    copy_packet_to_mem mem2
+    copy_packet_to_mem mem2 
     (
-        .iclk               (i_rx_clk_2),
-        .i_rst              (),
-        .idv                (wdv2),
-        .irx_d              (wrx_d2),
-        .irx_er             (wrx_er2),
-        .iframe_state       (wfsm_state2),
-        .imem_ptr           (),              
-        .ida_en             (),                                                                // Ended there
-        .oempty             (),
-        .ofull              (),
-        .or_data            (),
-        .olen_pac           (), 
-        .optr_rd            (),                
-        .oPacDA             ()        
+        .iclk                                (),
+        .irst                                (),
+        .idv                                 (),
+        .irx_d                               (),
+        .irx_er                              (),
+        .iframe_state                        (),
+        .ird_en                              (),              // for pre_arb
+        .iready                              (),              // Avalon-ST                                                                // Ended there
+        .oempty_sram                         (),
+        .ofull_sram                          (),
+        .oempty_fifo                         (),
+        .ofull_fifo                          (),
+        .olen_plus_ptr                       (),
+        .oda                                 (),                
+        .ovalid                              (),              // Avalon-ST
+        .odata                               (),              // Avalon-ST
+        .oerror                              (),              // Avalon-ST
+        .ochannel                            (),              // Avalon-ST
+        .ostartofpacket                      (),              // Avalon-ST
+        .oendofpacket                        ()               // Avalon-ST
     );
 
-    copy_packet_to_mem mem3
+    copy_packet_to_mem mem3 
     (
-        .iclk               (i_rx_clk_3),
-        .i_rst              (),
-        .idv                (wdv3),
-        .irx_d              (wrx_d3),
-        .irx_er             (wrx_er3),
-        .iframe_state       (wfsm_state3),
-        .imem_ptr           (),            
-        .ida_en             (),                                                                // Ended there
-        .oempty             (),
-        .ofull              (),
-        .or_data            (),
-        .olen_pac           (), 
-        .optr_rd            (),                
-        .oPacDA             ()        
+        .iclk                                (),
+        .irst                                (),
+        .idv                                 (),
+        .irx_d                               (),
+        .irx_er                              (),
+        .iframe_state                        (),
+        .ird_en                              (),              // for pre_arb
+        .iready                              (),              // Avalon-ST                                                                // Ended there
+        .oempty_sram                         (),
+        .ofull_sram                          (),
+        .oempty_fifo                         (),
+        .ofull_fifo                          (),
+        .olen_plus_ptr                       (),
+        .oda                                 (),                
+        .ovalid                              (),              // Avalon-ST
+        .odata                               (),              // Avalon-ST
+        .oerror                              (),              // Avalon-ST
+        .ochannel                            (),              // Avalon-ST
+        .ostartofpacket                      (),              // Avalon-ST
+        .oendofpacket                        ()               // Avalon-ST
     );
-
 endmodule

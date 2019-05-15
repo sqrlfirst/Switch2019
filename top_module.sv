@@ -163,7 +163,7 @@ module top_module
 
     copy_packet_to_mem mem0 
     (
-        .iclk                                (),
+        .iclk                                (iclk),
         .irst                                (),
         .idv                                 (),
         .irx_d                               (),

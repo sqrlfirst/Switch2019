@@ -22,7 +22,7 @@ module copy_packet_to_mem //Переделать
     output wire                                             ofull_sram,
     output reg                                              oempty_fifo,
     output reg                                              ofull_fifo,
-    output wire [pFIFO_WIDTH+$clog2(pDEPTH_RAM)-1:0]        olen_plus_ptr,
+    output reg  [pFIFO_WIDTH+$clog2(pDEPTH_RAM)-1:0]        olen_plus_ptr,
     output wire [$clog2(pMAC_MEM_DEPTH)-1:0]                oda,                
     output reg                                              ovalid,             // Avalon-ST
     output wire [pDATA_WIDTH=1:0]                           odata,              // Avalon-ST
@@ -56,6 +56,8 @@ module copy_packet_to_mem //Переделать
     reg [pFIFO_DEPTH+$clog2(pDEPTH_RAM)+
          $clog2(pMAC_MEM_DEPTH)-1:0]                rgeneralfifo_d     = 'b0;
     
+    reg [pFIFO_DEPTH+$clog2(pDEPTH_RAM)+
+         $clog2(pMAC_MEM_DEPTH)-1:0]                rgeneralfifo_d_out = 'bz;    
 
     reg [2:0]                                       rpacda_count;
 
@@ -73,7 +75,7 @@ module copy_packet_to_mem //Переделать
         .iw_data                (rgeneralfifo_d),                  
         .oempty                 (oempty_fifo),
         .ofull                  (ofull_fifo),
-        .or_data                ({olen_plus_ptr,oda})
+        .or_data                (rgeneralfifo_d_out)
     );
 
     fifo                                                                                // FIFO Module
@@ -189,7 +191,13 @@ module copy_packet_to_mem //Переделать
     // Show data to out for pre_arb
     always @(posedge iclk) begin
         if(ird_en) begin
-            olen_plus
+            olen_plus_ptr <= rgeneralfifo_d_out[pFIFO_DEPTH+$clog2(pDEPTH_RAM)+
+                                                $clog2(pMAC_MEM_DEPTH)-1:$clog2(pMAC_MEM_DEPTH)];
+            oda           <= rgeneralfifo_d_out[$clog2(pMAC_MEM_DEPTH)-1:0];
+        end
+        else begin
+            olen_plus_ptr <= 'bz;
+            oda           <= 'bz;
         end
     end
     
